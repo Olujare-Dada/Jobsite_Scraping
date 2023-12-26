@@ -1,0 +1,230 @@
+CONNECTION_PAGE.PY:
+
+The connection_page.py file contains functions related to making web requests and parsing web pages. Let's go through each function and its purpose:
+
+parse_webpage(URL, max_retries=3, timeout=10):
+
+This function is used to make a web request to a given URL and check the connection status.
+It accepts three parameters:
+URL: The URL of the web page to connect to.
+max_retries: The maximum number of retries to attempt if there are connection issues (default is 3).
+timeout: The timeout duration for the connection in seconds (default is 10).
+It uses a while loop with retries to handle potential connection errors.
+Inside the loop, it attempts to open the URL using a User-Agent header to mimic a web browser.
+If the connection is successful, it retrieves and returns the HTTP status code of the response.
+If there are HTTP errors or timeouts during the connection, it retries a specified number of times.
+After reaching the maximum number of retries, it returns the last connection status code (either success or failure).
+
+
+get_webpage(URL):
+
+This function makes a GET request to a given URL using the requests library and parses the HTML content with BeautifulSoup.
+It accepts one parameter:
+URL: The URL of the web page to fetch.
+It returns a BeautifulSoup object representing the parsed HTML content of the web page.
+no_info(URL):
+
+This function checks if a web page contains the text "This page cannot be accessed." (case-insensitive).
+It calls get_webpage(URL) to fetch the page content and checks if the text is present.
+It returns True if the text is not found on the page, indicating that the page is accessible, and False otherwise.
+
+
+
+JOBBERMAN_TOOLS.PY:
+The jobberman_tools.py file appears to contain a class named Jobberman_Basic_Tools and related functions for web scraping tasks on the Jobberman website. Let's go through each method in the class and its purpose:
+
+__init__(self):
+
+This is the constructor method for the Jobberman_Basic_Tools class. It initializes an instance of the class.
+vals_from_href_pattern(self, soup_obj, pattern):
+
+This method extracts all HTML elements (<a> tags) with href attributes matching a specified regular expression pattern from a BeautifulSoup object.
+It accepts two parameters:
+soup_obj: A BeautifulSoup object representing the parsed HTML content.
+pattern: A regular expression pattern to match against the href attributes of <a> tags.
+It returns a list of matching HTML elements.
+
+
+link_from_html_attr(self, soup_obj, attr="href"):
+
+This method extracts the value of a specified HTML attribute (default is "href") from a BeautifulSoup object.
+It accepts two parameters:
+soup_obj: A BeautifulSoup object representing the parsed HTML content.
+attr: The name of the HTML attribute to extract (default is "href").
+It returns the value of the specified attribute.
+html_from_tag(self, soup_obj, tag_name):
+
+This method retrieves all HTML elements with a specified tag name from a BeautifulSoup object.
+It accepts two parameters:
+soup_obj: A BeautifulSoup object representing the parsed HTML content.
+tag_name: The name of the HTML tag to search for.
+It returns a list of matching HTML elements.
+
+
+html_from_tag_attrs(self, soup_obj, tag_name, attribute_name, attribute_value):
+
+This method finds all HTML elements with a specified tag name and specific attribute name and value from a BeautifulSoup object.
+It accepts four parameters:
+soup_obj: A BeautifulSoup object representing the parsed HTML content.
+tag_name: The name of the HTML tag to search for.
+attribute_name: The name of the HTML attribute to match.
+attribute_value: The value of the HTML attribute to match.
+It returns a list of matching HTML elements.
+
+
+get_text(self, soup_obj):
+
+This method retrieves the text content of a BeautifulSoup object.
+It accepts one parameter:
+soup_obj: A BeautifulSoup object representing the parsed HTML content.
+It returns the text content as a string.
+htmls_from_attrs(self, soup_obj, attribute_name, attribute_value):
+
+This method finds all HTML elements with specific attribute name and value from a BeautifulSoup object.
+It accepts three parameters:
+soup_obj: A BeautifulSoup object representing the parsed HTML content.
+attribute_name: The name of the HTML attribute to match.
+attribute_value: The value of the HTML attribute to match.
+It returns a list of matching HTML elements.
+
+
+html_from_child(self, soup_obj, tag_name):
+
+This method retrieves the first child HTML element with a specified tag name from a BeautifulSoup object.
+It accepts two parameters:
+soup_obj: A BeautifulSoup object representing the parsed HTML content.
+tag_name: The name of the HTML tag to search for.
+It returns the first matching HTML element.
+
+
+htmls_from_children(self, soup_obj, tag_name):
+
+This method retrieves all child HTML elements with a specified tag name from a BeautifulSoup object.
+It accepts two parameters:
+soup_obj: A BeautifulSoup object representing the parsed HTML content.
+tag_name: The name of the HTML tag to search for among children.
+It returns a list of matching HTML elements.
+
+
+html_from_next_element(self, soup_obj, tag_name):
+
+This method retrieves the next HTML element with a specified tag name from a BeautifulSoup object.
+It accepts two parameters:
+soup_obj: A BeautifulSoup object representing the parsed HTML content.
+tag_name: The name of the HTML tag to search for.
+It returns the next matching HTML element.
+
+
+htmls_from_next_sibling(self, soup_obj, tag_name):
+
+This method retrieves all HTML elements with a specified tag name from the next sibling of a BeautifulSoup object.
+It accepts two parameters:
+soup_obj: A BeautifulSoup object representing the parsed HTML content.
+tag_name: The name of the HTML tag to search for among next siblings.
+It returns a list of matching HTML elements.
+
+
+webpage_soup(self, page_URL, iterations=False):
+
+This method fetches and parses the HTML content of a web page.
+It accepts two parameters:
+page_URL: The URL of the web page to fetch.
+iterations: A boolean flag indicating whether to include a sleep delay (default is False).
+It first checks if the page is accessible by calling the no_info function from the connection_page module.
+If the page is accessible, it makes a web request to the URL and retrieves the BeautifulSoup object.
+It can include a sleep delay if iterations is True (used for repeated requests).
+It returns the BeautifulSoup object representing the parsed HTML content of the web page.
+
+
+
+
+JOBBERMAN_MACHINES.PY:
+The code begins by importing various libraries and modules, including requests, re, BeautifulSoup, time, datetime, urlopen, HTTPError, Thread, and Lock. Additionally, it imports the Jobberman_Basic_Tools class from the jobberman_tools module and renames it as jbt.
+
+The JBT variable is initialized as an instance of the Jobberman_Basic_Tools class.
+
+The website_name variable is set to "JOBBERMAN," and two URL variables, landing_page_URL and landing_page_URL2, are defined to store the website's landing page URLs.
+
+A decorator function named add_last_page_decorator is defined. It takes another function func as an argument. This decorator is designed to enhance the functionality of the provided function by adding the ability to determine the last page number of job listings on the website.
+
+Inside the add_last_page_decorator function, the _number_of_main_pages function is defined. This function scrapes the landing page of the website, extracts links to various pages of job listings, and calculates the last page number. It then calls the provided function func with the last page number as an argument and returns the result.
+
+The _number_of_main_pages function first retrieves the HTML content of the landing page using the JBT.webpage_soup function and searches for all <a> tags with href attributes containing "https://www.jobberman.com/jobs?". These links are filtered to extract the page numbers. The last page number is determined and displayed.
+
+The _create_page_listings function is defined to scrape individual pages of job listings. It takes several arguments, including the base link, list source URL, page number, page listings, job listings, and a mutex. This function retrieves and processes the HTML content of a specific job listings page, extracts job listing links, and stores them in the page_listings list.
+
+The _last_page_function function is defined to manage the last page information. It takes the last page number and an optional file path as arguments. This function reads the previous last page information from a file if it exists, updates the last page number and time, and writes the updated information back to the file.
+
+These functions appear to be setting up the groundwork for web scraping job listings from the Jobberman website, including determining the last page number and managing page listings. The use of decorators and threading hints at a structured approach to scraping multiple pages efficiently.
+
+main_pages_links:
+This function retrieves and processes job listings from multiple pages of the website. It takes the last page number of job listings, a URL pattern for individual job listings, and the base URL of job listings pages as input parameters.
+
+
+_joblinks_to_soup:
+This function takes job listings, retrieves the HTML content of each job listing page, and stores it in a dictionary (soup_dict). It also captures timestamps and stores them in datetime_dict. The function uses a mutex list to manage synchronization between threads.
+
+
+_batch_maker:
+This function divides a number into batches of a specified size (value) and returns a list of tuples representing batch ranges.
+
+
+_within_txt_info:
+This function extracts non-empty lines of text from a BeautifulSoup object.
+
+
+-scrape_info:
+This function extracts various pieces of information from a job listing page using BeautifulSoup. It retrieves details such as job role, company name, industry, location, job type, job summary, education requirements, experience level requirements, experience length requirements, job description, salary, and date of post.
+
+
+pre_dataframe:
+This function takes two dictionaries, soup_objs and datetimes, which contain BeautifulSoup objects for job listing pages and datetime information for those pages, respectively. It then processes this data to prepare it for conversion into a DataFrame.
+
+The function iterates through the job listing pages, extracts job-related information using the _scrape_info function, and organizes this information into a list of lists. Each inner list represents a row of job-related information, including details such as job role, company name, industry, location, job type, and more.
+
+
+
+
+SCRAPING_JOBBERMAN.PY
+The scraping_jobberman.py file brings together and orchestrates the functionality provided by the previous three files (connection_page.py, jobberman_tools.py, and jobberman_machines.py) to scrape job data from the Jobberman website, process it, and store it in a CSV file. Here's an explanation of how it works in the context of the other files:
+
+Importing Modules: The script starts by importing the necessary modules, including pandas for data manipulation, jobberman_machines to access functions defined in the jobberman_machines.py file, and time to measure execution time.
+
+Starting the Timer: It records the start time using time.time() to measure the total execution time.
+
+Scraping Data: It calls the main_pages_links() function from jobberman_machines.py to scrape job data from the Jobberman website. The function returns three main objects:
+
+soup_objs: A dictionary containing Beautiful Soup objects for each job page.
+jobpage_links: This object is not used in this script.
+datetimes: A dictionary containing the timestamps of when each page was scraped.
+Preparing Data: It calls the pre_dataframe() function from jobberman_machines.py to preprocess the scraped data. This function iterates through the soup_objs and extracts relevant job information, returning a list of job data.
+
+Creating a DataFrame: Using the preprocessed data, it attempts to create a Pandas DataFrame. If data has been successfully scraped and preprocessed, a DataFrame is created with columns representing various job attributes. If no data is available (e.g., a ValueError is raised), an error message is printed.
+
+Saving Data: If a DataFrame is successfully created, it is saved to a CSV file named "Jobberman_data.csv" without an index, in append mode ('a') to preserve previously scraped data. This is to ensure that data is not overwritten if the script is run multiple times.
+
+Displaying a Sample: A sample of the DataFrame (the first few rows) is printed to the console.
+
+Calculating Execution Time: The script calculates and prints the total execution time by subtracting the end time from the start time.
+
+
+
+
+PROJECT SUMMARY:
+Project Summary:
+The project is a web scraping and data collection system for the Jobberman job listing website. It aims to automate the process of gathering job data, processing it, and storing it in a structured format for further analysis. The system consists of four Python files: connection_page.py, jobberman_tools.py, jobberman_machines.py, and scraping_jobberman.py.
+
+How It Works:
+
+connection_page.py: This file contains functions for making HTTP requests and parsing web pages. It checks the connection to the website, retrieves web page content, and checks if a page contains useful information.
+
+jobberman_tools.py: This module provides basic tools for working with web page content. It includes functions to extract links, HTML elements, text, and other information from web pages. It also defines a class, Jobberman_Basic_Tools, with various methods for extracting specific types of data.
+
+jobberman_machines.py: This file defines functions and classes for orchestrating the web scraping process. It includes functions to fetch job listings, create Beautiful Soup objects, and extract specific job details. It also manages data pagination and provides tools for multi-threaded data retrieval.
+
+scraping_jobberman.py: This is the main script that brings everything together. It imports functions and objects from the previous three files, scrapes job data, processes it, creates a Pandas DataFrame, and saves the data in a CSV file. The script measures execution time and provides feedback on the collected data.
+
+File Dependencies:
+
+scraping_jobberman.py calls functions from jobberman_machines.py, which in turn depends on functions and classes from jobberman_tools.py.
+jobberman_machines.py uses functions from connection_page.py to check website connections and retrieve web pages.
